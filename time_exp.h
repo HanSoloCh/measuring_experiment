@@ -5,6 +5,9 @@
 
 int alloc_mem_with_count(FILE *f, int **arr, size_t *n_mem);
 
-int alloc_mem_with_capacity(FILE *f, int **arr, size_t *n_mem);
+int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem);
+
+int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem);
+
 
 #endif //LEARNING_TIME_EXP_H

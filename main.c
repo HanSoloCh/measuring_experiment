@@ -6,6 +6,7 @@
 
 #define WITH_COUNT 'c'
 #define WITH_CAPACITY 'r'
+#define WITH_WRONG_CAPACITY 'w'
 
 int main(int argc, char **argv) {
     int rc = 0;
@@ -28,7 +29,11 @@ int main(int argc, char **argv) {
         end = clock();
     } else if (*argv[2] == WITH_CAPACITY) {
         start = clock();
-        rc = alloc_mem_with_capacity(f, &arr, &n);
+        rc = alloc_mem_with_right_capacity(f, &arr, &n);
+        end = clock();
+    } else if (*argv[2] == WITH_WRONG_CAPACITY) {
+        start = clock();
+        rc = alloc_mem_with_wrong_capacity(f, &arr, &n);
         end = clock();
     } else {
         rc = 5;

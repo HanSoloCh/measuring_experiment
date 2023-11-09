@@ -9,21 +9,27 @@ files = sorted(os.listdir(data_dir), key=lambda x: int(x.split('_')[0]))
 
 data_dict_1 = {}  # Данные для первого графика
 
-
 # Проходимя по файлам с данными
 for file_name in files:
-
     # Получаем название эксперимента из имени файла
     experiment_name = '_'.join(file_name[:-4].split('_')[1:])
 
     # Считываем данные из файла
     with open(os.path.join(data_dir, file_name)) as f:
+        if experiment_name == 'c':
+            experiment_name = 'count'
+        elif experiment_name == 'r':
+            experiment_name = 'realloc №1'
+        elif experiment_name == 'w':
+            experiment_name = 'realloc №2'
+
         # Инициализируем начальные данные
         if experiment_name not in data_dict_1:
             data_dict_1[experiment_name] = [[], []]
 
         # Размерность опытного массива
         data_dict_1[experiment_name][0].append(int(file_name.split('_')[0]))
+
         # Проверить, что считанное действительно среднее
         while 'Averange' not in (read_info := f.readline()) or not read_info:
             pass
@@ -35,15 +41,13 @@ for file_name in files:
             print('Something wrong with data. Run make_preproc.py\n')
             exit()
 
-
-colors = ['red', 'green']
+colors = ['red', 'green', 'blue']
 
 # Строим первые два графика
 fig, ax = plt.subplots(figsize=(12, 8))
 j = 0
 
 for experiment_name, data in sorted(data_dict_1.items()):
-
     # создание графика
     ax.set_xlabel('NMAX')
     ax.set_ylabel('time, msec')
@@ -56,4 +60,10 @@ for experiment_name, data in sorted(data_dict_1.items()):
 # добавление легенды
 ax.plot()
 ax.legend()
-fig.savefig(f'graph.png')
+
+# Создаем папку "graphs" если её нет
+if not os.path.exists('graphs'):
+    os.makedirs('graphs')
+
+# Сохраняем график в папке "graphs"
+fig.savefig(os.path.join('graphs', 'graph.png'))

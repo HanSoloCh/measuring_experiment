@@ -1,0 +1,19 @@
+CC := gcc
+CFLAGS := -Wall -Werror -Wextra
+
+all: update_data preproc postproc
+
+app.exe: main.c time_exp.c time_exp.h
+	$(CC) $(CFLAGS) main.c time_exp.c -o app.exe
+
+update_data: app.exe
+	mkdir -p data
+	./update_data.sh
+
+preproc: make_preproc.py
+	mkdir -p preproc
+	python3 make_preproc.py
+
+postproc: make_postproc.py
+	mkdir -p graphs
+	python3 make_postproc.py

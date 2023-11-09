@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Задание начальных значений переменных
-type_of_alloc="c r"  # Типы сортировки
+type_of_alloc="c r w"  # Типы сортировки
 
 sizes="0 1 10 50 100 500 1000 1500 2000 2500 3000 3500 4000 4500 5000 5500 6000 6500 7000 7500 8000 8500 9000 9500 10000"  # Размеры данных
 
@@ -30,6 +30,8 @@ while getopts ":t:s:c:" op; do
 done
 
 gcc main.c time_exp.c -o ./app.exe
+
+mkdir -p data
 # Цикл по размерам данных
 for size in $sizes; do
 

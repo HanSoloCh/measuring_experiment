@@ -32,4 +32,5 @@ for filename in sorted(os.listdir(input_dir_name), ):
             output_file.write(f"Disp: {disp}\n")
             output_file.write(f"Stderr: {stderr}\n")
             output_file.write(f"RSE: {rse}\n")
+            output_file.write(f"count: {n}\n")
 

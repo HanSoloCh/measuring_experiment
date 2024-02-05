@@ -19,9 +19,13 @@ for file_name in files:
         if experiment_name == 'c':
             experiment_name = 'count'
         elif experiment_name == 'r':
-            experiment_name = 'realloc №1'
+            experiment_name = 'realloc №1 (*2)'
         elif experiment_name == 'w':
-            experiment_name = 'realloc №2'
+            experiment_name = 'realloc №2 (+1)'
+        elif experiment_name == 'fr':
+            experiment_name = 'realloc №1 (*2) with fragmentation'
+        elif experiment_name == 'fw':
+            experiment_name = 'realloc №2 (+1) with fragmentation'
 
         # Инициализируем начальные данные
         if experiment_name not in data_dict_1:
@@ -41,7 +45,7 @@ for file_name in files:
             print('Something wrong with data. Run make_preproc.py\n')
             exit()
 
-colors = ['red', 'green', 'blue']
+colors = ['red', 'green', 'blue', 'black', 'pink']
 
 # Строим первые два графика
 fig, ax = plt.subplots(figsize=(12, 8))

@@ -15,7 +15,10 @@ preproc: make_preproc.py
 	mkdir -p preproc
 	python3 make_preproc.py
 
-.PHOBY: postproc
+.PHONY: postproc
 postproc: make_postproc.py
 	mkdir -p graphs
 	python3 make_postproc.py
+
+clean:
+	rm -rf ./data ./preproc app.exe

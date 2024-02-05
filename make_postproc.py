@@ -65,7 +65,7 @@ ax.legend()
 if not os.path.exists('graphs'):
     os.makedirs('graphs')
 
-name = input('Enter name for graph')
+name = input('Enter name for graph: ')
 
 # Сохраняем график в папке "graphs"
 fig.savefig(os.path.join('graphs', name))

@@ -10,10 +10,12 @@ update_data: app.exe
 	mkdir -p data
 	./update_data.sh
 
+.PHONY: preproc
 preproc: make_preproc.py
 	mkdir -p preproc
 	python3 make_preproc.py
 
+.PHOBY: postproc
 postproc: make_postproc.py
 	mkdir -p graphs
 	python3 make_postproc.py

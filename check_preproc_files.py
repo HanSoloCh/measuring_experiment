@@ -5,7 +5,7 @@ data_dir = 'preproc'
 files = sorted(os.listdir(data_dir), key=lambda x: int(x.split('_')[0]))
 
 need_more_info_list = list()
-rse = int(input('Input max valiable rse: '))
+rse = float(input('Input max valiable rse: '))
 
 # Перебор файлов
 for file_name in files:

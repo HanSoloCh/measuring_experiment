@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h>
 
 #define N_BLOCK 10000
 
@@ -20,9 +21,12 @@ static void block_free(int **mem_arr, size_t n) {
         free(mem_arr[i]);
 }
 
-int alloc_mem_with_count(FILE *f, int **arr, size_t *n_mem) {
+int alloc_mem_with_count(FILE *f, int **arr, size_t *n_mem, double *expetimental_time) {
+    INIT_MEASURE;
+
     int rc = 0;
     size_t count = 0;
+    START_MEASURE;
     while (rc == 0) {
         int tmp;
         if (fscanf(f, "%d", &tmp) != 1)
@@ -44,15 +48,22 @@ int alloc_mem_with_count(FILE *f, int **arr, size_t *n_mem) {
                 fscanf(f, "%d", &(*arr)[i]);
         }
     }
+    STOP_MEASURE;
+    CALK_TIME_OF_MEASURE;
+    *expetimental_time = GET_TIME_OF_MEASURE;
+
     *n_mem = count;
     return rc;
 }
 
-int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem) {
+int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem, double *expetimental_time) {
+    INIT_MEASURE;
+    
     *arr = NULL;
     size_t count = 0;
     size_t capacity = 0;
     int rc = 0;
+    START_MEASURE;
     while (rc == 0) {
         int tmp;
         if (fscanf(f, "%d", &tmp) != 1)
@@ -71,6 +82,10 @@ int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem) {
             (*arr)[count++] = tmp;
         }
     }
+    STOP_MEASURE;
+    CALK_TIME_OF_MEASURE;
+    *expetimental_time = GET_TIME_OF_MEASURE;
+    
     if (rc == 1 && feof(f)) {
         rc = 0;
     }
@@ -78,11 +93,14 @@ int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem) {
     return rc;
 }
 
-int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem) {
+int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem, double *expetimental_time) {
+    INIT_MEASURE;
+
     *arr = NULL;
     size_t count = 0;
     size_t capacity = 0;
     int rc = 0;
+    START_MEASURE;
     while (rc == 0) {
         int tmp;
         if (fscanf(f, "%d", &tmp) != 1)
@@ -101,6 +119,10 @@ int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem) {
             (*arr)[count++] = tmp;
         }
     }
+    STOP_MEASURE;
+    CALK_TIME_OF_MEASURE;
+    *expetimental_time = GET_TIME_OF_MEASURE;
+    
     if (rc == 1 && feof(f)) {
         rc = 0;
     }
@@ -108,8 +130,10 @@ int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem) {
     return rc;
 }
 
-int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, clock_t *new_time) {
-    MEASURE;
+int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, double *expetimental_time) {
+    INIT_MEASURE;
+    *expetimental_time = 0;
+    
     // Массив для блоков искусственной фрагментации
     int *mem_arr[N_BLOCK] = {NULL};
     // Количество вызовов realloc
@@ -121,6 +145,7 @@ int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
     size_t count = 0;
     size_t capacity = 0;
     while (rc == 0) {
+        START_MEASURE;
         int tmp;
         if (fscanf(f, "%d", &tmp) != 1)
             rc = 1;
@@ -129,11 +154,6 @@ int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
                 capacity = capacity == 0 ? 1 : capacity * 2;
                 int *new_tmp_arr = realloc(*arr, capacity * sizeof(int));
 
-                START_MEASURE;
-                block_mem(mem_arr, N_BLOCK, count_of_realloc++);
-                STOP_MEASURE;
-                *new_time = GET_TIME_OF_MEASURE;
-
                 if (new_tmp_arr == NULL) {
                     rc = 2;
                     free(*arr);
@@ -143,22 +163,27 @@ int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
             }
             (*arr)[count++] = tmp;
         }
+        STOP_MEASURE;
+        CALK_TIME_OF_MEASURE;
+        *expetimental_time += GET_TIME_OF_MEASURE;
+        
+        block_mem(mem_arr, N_BLOCK, count_of_realloc++);
     }
+    
     if (rc == 1 && feof(f)) {
         rc = 0;
     }
-
-    START_MEASURE;
     block_free(mem_arr, N_BLOCK);
-    STOP_MEASURE;
-    *new_time += GET_TIME_OF_MEASURE;
-
+    
     *n_mem = count;
     return rc;
 }
 
-int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, clock_t *new_time) {
-    MEASURE;
+#include <time.h>
+
+int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, double *expetimental_time) {
+    INIT_MEASURE;
+    *expetimental_time = 0;
     // Массив для блоков искусственной фрагментации
     int *mem_arr[N_BLOCK] = {NULL};
     // Количество вызовов realloc
@@ -170,6 +195,7 @@ int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
     size_t count = 0;
     size_t capacity = 0;
     while (rc == 0) {
+        START_MEASURE;
         int tmp;
         if (fscanf(f, "%d", &tmp) != 1)
             rc = 1;
@@ -177,13 +203,6 @@ int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
             if (count >= capacity) {
                 capacity++;
                 int *new_tmp_arr = realloc(*arr, capacity * sizeof(int));
-
-                START_MEASURE;
-                block_mem(mem_arr, N_BLOCK, count_of_realloc++);
-                STOP_MEASURE;
-                *new_time = GET_TIME_OF_MEASURE;
-
-
                 if (new_tmp_arr == NULL) {
                     rc = 2;
                     free(*arr);
@@ -193,15 +212,16 @@ int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
             }
             (*arr)[count++] = tmp;
         }
+        STOP_MEASURE;
+        block_mem(mem_arr, N_BLOCK, count_of_realloc++);
+        CALK_TIME_OF_MEASURE;
+        *expetimental_time += GET_TIME_OF_MEASURE;
     }
+    
     if (rc == 1 && feof(f)) {
         rc = 0;
     }
-
-    START_MEASURE;
     block_free(mem_arr, N_BLOCK);
-    STOP_MEASURE;
-    *new_time += GET_TIME_OF_MEASURE;
 
     *n_mem = count;
     return rc;

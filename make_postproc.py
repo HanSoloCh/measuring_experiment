@@ -16,15 +16,17 @@ for file_name in files:
 
     # Считываем данные из файла
     with open(os.path.join(data_dir, file_name)) as f:
-        if experiment_name == 'c':
+        if '_musl-gcc' not in experiment_name:
+            continue
+        if experiment_name == 'c_musl-gcc':
             experiment_name = 'count'
-        elif experiment_name == 'r':
+        elif experiment_name == 'r_musl-gcc':
             experiment_name = 'realloc №1 (*2)'
-        elif experiment_name == 'w':
+        elif experiment_name == 'w_musl-gcc':
             experiment_name = 'realloc №2 (+1)'
-        elif experiment_name == 'fr':
+        elif experiment_name == 'fr_musl-gcc':
             experiment_name = 'realloc №1 (*2) with fragmentation'
-        elif experiment_name == 'fw':
+        elif experiment_name == 'fw_musl-gcc':
             experiment_name = 'realloc №2 (+1) with fragmentation'
 
         # Инициализируем начальные данные

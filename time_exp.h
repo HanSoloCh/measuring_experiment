@@ -2,21 +2,24 @@
 #define _TIME_EXP_H
 
 #include <stdio.h>
-#include <time.h>
 
-#define MEASURE clock_t start, stop
-#define START_MEASURE start = clock()
-#define STOP_MEASURE stop = clock()
-#define GET_TIME_OF_MEASURE stop - start
+#define INIT_MEASURE struct timespec start, end
+#define START_MEASURE clock_gettime(CLOCK_REALTIME, &start)
+#define STOP_MEASURE clock_gettime(CLOCK_REALTIME, &end)
+#define CALK_TIME_OF_MEASURE long seconds = end.tv_sec - start.tv_sec;       \
+                             long nanoseconds = end.tv_nsec - start.tv_nsec; \
+                             double elapsed = seconds + nanoseconds * 1e-9
 
-int alloc_mem_with_count(FILE *f, int **arr, size_t *n_mem);
+#define GET_TIME_OF_MEASURE elapsed
 
-int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem);
+int alloc_mem_with_count(FILE *f, int **arr, size_t *n_mem, double *experimental_time);
 
-int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem);
+int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem, double *experimental_time);
 
-int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, clock_t *extra_time);
+int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem, double *experimental_time);
 
-int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, clock_t *extra_time);
+int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, double *experimental_time);
+
+int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, double *experimental_time);
 
 #endif

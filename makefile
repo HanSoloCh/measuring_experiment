@@ -1,5 +1,5 @@
-CC := gcc
-CFLAGS := -Wall -Werror -Wextra
+#CC := gcc
+#CFLAGS := -Wall -Werror -Wextra
 
 all: update_data preproc postproc
 

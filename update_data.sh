@@ -9,11 +9,11 @@ compilers=("gcc" "diet gcc" "musl-gcc")
 
 
 count=500  # Количество запусков
+log="false"  # Флаг компиляции
 
-mkdir -p ./data
 
 # Обработка опций командной строки
-while getopts ":t:s:c:" op; do
+while getopts ":t:s:c:l" op; do
   case $op in
     t)
       type_of_alloc=$OPTARG
@@ -24,6 +24,9 @@ while getopts ":t:s:c:" op; do
     c)
       count=$OPTARG
       ;;
+    l)
+      log="true"
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
@@ -31,20 +34,33 @@ while getopts ":t:s:c:" op; do
   esac
 done
 
-
-mkdir -p data
+if [ "$log" = "true" ]; then
+  mkdir -p log
+else
+  mkdir -p data
+fi
 
 for compiler in "${compilers[@]}"; do
-  eval "$compiler" -static -O0 main.c time_exp.c -o ./app.exe
+  if [ "$log" = "true" ]; then
+    eval "$compiler" -DLOG -static -O0 ./src/main.c ./src/time_exp.c -I./inc -o ./app.exe
+  else
+    eval "$compiler" -static -O0 ./src/main.c ./src/time_exp.c -I./inc -o ./app.exe
+  fi
   # Цикл по размерам данных
   for size in $sizes; do
   # Цикл по количеству запусков
   # Вложенные циклы для комбинаций параметров
     for type in $type_of_alloc; do
         for co in $(seq "$count"); do
-            echo -n -e "$compiler size = $size $co/$count $type \r"
             # Запуск приложения с указанными параметрами и запись вывода в файл
-            eval ./app.exe ./files/"$size" "$type" >> ./data/"$size"_"$type"_"$compiler".txt
+            if [ "$log" = "true" ]; then
+              echo -n -e "$compiler size = $size $type \r"
+              eval ./app.exe ./files/"$size" "$type" >> ./log/"$size"_"$type"_"$compiler".log
+              break
+            else
+              echo -n -e "$compiler size = $size $co/$count $type \r"
+              eval ./app.exe ./files/"$size" "$type" >> ./data/"$size"_"$type"_"$compiler".txt
+            fi
       done
     done
   done

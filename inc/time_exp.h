@@ -1,5 +1,5 @@
-#ifndef _TIME_EXP_H
-#define _TIME_EXP_H
+#ifndef TIME_EXP_H__
+#define TIME_EXP_H__
 
 #include <stdio.h>
 

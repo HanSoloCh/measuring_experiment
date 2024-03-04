@@ -7,6 +7,7 @@
 
 #define N_BLOCK 10000
 
+
 static void block_mem(int **mem_arr, size_t n, size_t i) {
     if (i >= n) {
         i %= n;
@@ -72,6 +73,9 @@ int alloc_mem_with_right_capacity(FILE *f, int **arr, size_t *n_mem, double *exp
             if (count >= capacity) {
                 capacity = capacity == 0 ? 1 : capacity * 2;
                 int *new_tmp_arr = realloc(*arr, capacity * sizeof(int));
+#ifdef LOG
+                printf("realloc: %p, count: %zu, capacity: %zu\n", new_tmp_arr, count, capacity);
+#endif
                 if (new_tmp_arr == NULL) {
                     rc = 2;
                     free(*arr);
@@ -109,6 +113,9 @@ int alloc_mem_with_wrong_capacity(FILE *f, int **arr, size_t *n_mem, double *exp
             if (count >= capacity) {
                 capacity++;
                 int *new_tmp_arr = realloc(*arr, capacity * sizeof(int));
+#ifdef LOG
+                printf("realloc: %p, count: %zu, capacity: %zu\n", new_tmp_arr, count, capacity);
+#endif
                 if (new_tmp_arr == NULL) {
                     rc = 2;
                     free(*arr);
@@ -153,7 +160,9 @@ int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
             if (count >= capacity) {
                 capacity = capacity == 0 ? 1 : capacity * 2;
                 int *new_tmp_arr = realloc(*arr, capacity * sizeof(int));
-
+#ifdef LOG
+                printf("realloc: %p, count: %zu, capacity: %zu\n", new_tmp_arr, count, capacity);
+#endif
                 if (new_tmp_arr == NULL) {
                     rc = 2;
                     free(*arr);
@@ -179,7 +188,6 @@ int alloc_mem_with_right_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
     return rc;
 }
 
-#include <time.h>
 
 int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_mem, double *expetimental_time) {
     INIT_MEASURE;
@@ -203,6 +211,9 @@ int alloc_mem_with_wrong_capacity_fragmentation(FILE *f, int **arr, size_t *n_me
             if (count >= capacity) {
                 capacity++;
                 int *new_tmp_arr = realloc(*arr, capacity * sizeof(int));
+#ifdef LOG
+                printf("realloc: %p, count: %zu, capacity: %zu\n", new_tmp_arr, count, capacity);
+#endif
                 if (new_tmp_arr == NULL) {
                     rc = 2;
                     free(*arr);

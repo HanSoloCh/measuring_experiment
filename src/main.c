@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <stdlib.h>
 
 #define WITH_COUNT "c"
@@ -40,7 +39,9 @@ int main(int argc, char **argv) {
         rc = 5;
     }
 
+#ifndef LOG
     printf("%.9lf\n", experimental_time);
+#endif
 
     if (rc == 0)
         free(arr);

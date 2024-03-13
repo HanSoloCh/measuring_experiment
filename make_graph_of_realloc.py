@@ -76,4 +76,4 @@ for lib, data_dict in data.items():
         os.makedirs('graphs')
 
     # Сохраняем график в папке "graphs"
-    fig.savefig(os.path.join('graphs', f'graph_of_reallocates_1_{lib}'))
+    fig.savefig(os.path.join('graphs', f'graph_of_reallocates_{lib}'))

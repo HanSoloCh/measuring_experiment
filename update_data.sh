@@ -41,6 +41,7 @@ else
 fi
 
 for compiler in "${compilers[@]}"; do
+  # Если есть флаг -l, то компилируем с журналированием
   if [ "$log" = "true" ]; then
     eval "$compiler" -DLOG -static -O0 ./src/main.c ./src/time_exp.c -I./inc -o ./app.exe
   else
@@ -54,6 +55,7 @@ for compiler in "${compilers[@]}"; do
         for co in $(seq "$count"); do
             # Запуск приложения с указанными параметрами и запись вывода в файл
             if [ "$log" = "true" ]; then
+              # Если включено журналирование, то запускаем один раз
               echo -n -e "$compiler size = $size $type \r"
               eval ./app.exe ./files/"$size" "$type" >> ./log/"$size"_"$type"_"$compiler".log
               break

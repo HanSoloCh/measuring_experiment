@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 
 # Путь к папке с данными
-data_dir = 'preproc'
+data_dir = 'log'
 
 # Файлы с данными
 files = sorted(os.listdir(data_dir), key=lambda x: int(x.split('_')[0]))
@@ -41,16 +41,13 @@ for file_name in files:
         # Размерность опытного массива
         data_dict[experiment_name][0].append(int(file_name.split('_')[0]))
 
-        # Проверить, что считанное действительно среднее
-        while 'Average' not in (read_info := f.readline()) or not read_info:
-            pass
+        reallocates = set()
+        for line in f:
+            address = line.split(',')[0]
+            if 'realloc' in address:
+                reallocates.add(address)
 
-        if 'Average' in read_info:
-            data_dict[experiment_name][1].append(float(read_info.split()[1]))
-        # Если все-таки не нашлось нужных данных
-        else:
-            print('Something wrong with data. Run make_preproc.py\n')
-            exit()
+        data_dict[experiment_name][1].append(int(len(reallocates)))
 
 colors = ['red', 'green', 'blue', 'black', 'pink']
 
@@ -62,6 +59,8 @@ for lib, data_dict in data.items():
         # создание графика
         ax.set_xlabel('NMAX')
         ax.set_ylabel('time, msec')
+        if j == 4:
+            continue
 
         # построение линии
         x, y = data
@@ -77,4 +76,4 @@ for lib, data_dict in data.items():
         os.makedirs('graphs')
 
     # Сохраняем график в папке "graphs"
-    fig.savefig(os.path.join('graphs', f'graph_{lib}'))
+    fig.savefig(os.path.join('graphs', f'graph_of_reallocates_1_{lib}'))
